@@ -1,4 +1,56 @@
 # EHR Tools with MCP and FHIR
+
+## My Notes
+This repo is forked from jmandel/health-record-mcp. I needed to tweak a few things to get this to work on Windows.
+
+### Install Bun
+I already have Node installed, so I used it to install bun.
+`npm install -g bun`  
+Then `bun install` in the root directory
+
+### Certificate
+
+You'll need a certificate to run the app on a local web server that uses HTTPs.
+
+1. Open Windows PowerShell, run as administrator
+2. Install Chocolatey if you don't have it
+3. Use `choco install mkcert` to install mkcert.
+4. Run `mkcert -install` will create local CA, `rootCA.pem` in `C:\Users\<userName>\AppData\Local\mkcert`
+5. Run `mkcert localhost 127.0.0.1 ::1` will create a trusted cert for localhost in the current directory. Do this in the root foler of repo.
+
+### Update Config File
+I used option `2. Local MCP Server via Stdio` later below in the README. When using that option, the default config file used is config.stdio.json. I modified it to support the callback to localhost. See file in repo.
+
+### MCP Client
+You can use any MCP client to test. Below is the configuration I used for VSCode. You can connect to the MCP server in Agent mode.
+
+1. Create a directory `.vscode` in the root directory of the repo.
+2. Create a file called `mcp.json` in that directory with the information below. Change file paths.
+
+```
+{
+    "servers": {
+      "ehr-mcp-server": {
+        "type": "stdio",
+        "command": "bun",
+        "args": [
+            "D:\\Projects\\health-record-mcp\\src\\cli.ts",
+            "--db",
+            "D:\\Projects\\health-record-mcp\\data\\my_record.sqlite"
+          ]
+      }
+    }
+  }
+```
+
+When viewing this file in VSCode, you'll see a Start button. Click that to start the MCP server, or use the command below, which is also present later in the README file.
+
+`bun run src/cli.ts --db ./data/my_record.sqlite`
+
+![alt text](image.png)
+
+## Original README
+
 ![EHR Tools Overview](static/overview.png)
 
 https://youtu.be/K0t6MRyIqZU?si=Mz4d65DcAD3i2YbO
